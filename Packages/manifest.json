@@ -1,5 +1,8 @@
 {
   "dependencies": {
+    "com.alelievr.node-graph-processor": "file:../MyPackages/NodeGraphProcessor-master/Assets/com.alelievr.NodeGraphProcessor",
+    "com.github.teodorvecerdi.dialoguegraph": "file:../MyPackages/DialogueGraph-main",
+    "com.subtegral.dialoguesystem": "file:../MyPackages/NodeBasedDialogueSystem-master",
     "com.unity.2d.animation": "13.0.2",
     "com.unity.2d.aseprite": "3.0.1",
     "com.unity.2d.psdimporter": "12.0.1",

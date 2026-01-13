@@ -1,8 +1,5 @@
 {
   "dependencies": {
-    "com.alelievr.node-graph-processor": "file:../MyPackages/NodeGraphProcessor-master/Assets/com.alelievr.NodeGraphProcessor",
-    "com.github.teodorvecerdi.dialoguegraph": "file:../MyPackages/DialogueGraph-main",
-    "com.subtegral.dialoguesystem": "file:../MyPackages/NodeBasedDialogueSystem-master",
     "com.unity.2d.animation": "13.0.2",
     "com.unity.2d.aseprite": "3.0.1",
     "com.unity.2d.psdimporter": "12.0.1",
@@ -12,6 +9,7 @@
     "com.unity.2d.tilemap.extras": "6.0.1",
     "com.unity.2d.tooling": "1.0.0",
     "com.unity.collab-proxy": "2.10.2",
+    "com.unity.graphtoolkit": "0.4.0-exp.2",
     "com.unity.ide.rider": "3.0.38",
     "com.unity.ide.visualstudio": "2.0.25",
     "com.unity.inputsystem": "1.17.0",

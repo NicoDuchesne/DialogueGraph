@@ -1,27 +1,5 @@
 {
   "dependencies": {
-    "com.alelievr.node-graph-processor": {
-      "version": "file:../MyPackages/NodeGraphProcessor-master/Assets/com.alelievr.NodeGraphProcessor",
-      "depth": 0,
-      "source": "local",
-      "dependencies": {}
-    },
-    "com.github.teodorvecerdi.dialoguegraph": {
-      "version": "file:../MyPackages/DialogueGraph-main",
-      "depth": 0,
-      "source": "local",
-      "dependencies": {
-        "com.unity.textmeshpro": "3.0.1",
-        "com.unity.shadergraph": "10.5.1",
-        "com.unity.nuget.newtonsoft-json": "2.0.0"
-      }
-    },
-    "com.subtegral.dialoguesystem": {
-      "version": "file:../MyPackages/NodeBasedDialogueSystem-master",
-      "depth": 0,
-      "source": "local",
-      "dependencies": {}
-    },
     "com.unity.2d.animation": {
       "version": "13.0.2",
       "depth": 0,
@@ -157,6 +135,15 @@
       "source": "builtin",
       "dependencies": {}
     },
+    "com.unity.graphtoolkit": {
+      "version": "0.4.0-exp.2",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.modules.uielements": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.unity.ide.rider": {
       "version": "3.0.38",
       "depth": 0,
@@ -202,13 +189,6 @@
     "com.unity.nuget.mono-cecil": {
       "version": "1.11.6",
       "depth": 2,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.nuget.newtonsoft-json": {
-      "version": "3.2.2",
-      "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
@@ -280,14 +260,6 @@
         "com.unity.modules.jsonserialize": "1.0.0"
       },
       "url": "https://packages.unity.com"
-    },
-    "com.unity.textmeshpro": {
-      "version": "5.0.0",
-      "depth": 1,
-      "source": "builtin",
-      "dependencies": {
-        "com.unity.ugui": "2.0.0"
-      }
     },
     "com.unity.timeline": {
       "version": "1.8.10",

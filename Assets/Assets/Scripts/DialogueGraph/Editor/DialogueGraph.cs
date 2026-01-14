@@ -1,16 +1,19 @@
 using UnityEngine;
+using Unity.GraphToolkit.Editor;
+using UnityEditor;
+using System;
 
-public class DialogueGraph : MonoBehaviour
+[Serializable]
+[Graph(AssetsExtention)]
+
+public class DialogueGraph : Graph
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+    public const string AssetsExtention = "dialoguegraph";
+
+    [MenuItem("Assets/Create/Dialogue Graph", false)]
+    private static void CreateAssetFile()
     {
-        
+        GraphDatabase.PromptInProjectBrowserToCreateNewAsset<DialogueGraph>();
     }
 }

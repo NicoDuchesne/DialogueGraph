@@ -1,36 +1,39 @@
-using UnityEngine;
+using F2O.SaveSystem;
 using TMPro;
+using UnityEngine;
 
 public class SaveUI : MonoBehaviour
 {
-    [Header("Références")]
-    public PlayerData playerData;
-    public TMP_Text infoText;
+    public TMP_Text slotText;
 
-    public void UpdateUI()
+    public void SelectSlot(int index)
     {
-        infoText.text =
-            $"Level : {playerData.level}\n" +
-            $"Health : {playerData.health}\n";
-     
+        SaveManager.Instance.currentSlot = (SaveSlot)index;
+        Refresh();
     }
 
-    public void Save()
+    public void NewSave()
     {
-        playerData.Save();
-        UpdateUI();
-        Debug.Log("Sauvegarde effectuée");
+        SaveManager.Instance.Save();
+        Refresh();
     }
 
-    public void Load()
+    public void LoadSave()
     {
-        playerData.Load();
-        UpdateUI();
-        Debug.Log("Chargement effectué");
+        SaveManager.Instance.Load();
+        Refresh();
     }
 
-    void Start()
+    public void OpenFolder()
     {
-        UpdateUI();
+        SaveManager.Instance.OpenSaveFolder();
+    }
+
+    void Refresh()
+    {
+        var slot = SaveManager.Instance.currentSlot;
+        slotText.text = SaveManager.Instance.SlotExists(slot)
+            ? $"Slot {slot} occupé"
+            : $"Slot {slot} vide";
     }
 }

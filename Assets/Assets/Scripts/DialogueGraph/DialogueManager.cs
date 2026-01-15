@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -6,16 +8,31 @@ using UnityEngine.UI;
 
 public class DialogueManager : MonoBehaviour
 {
-    public RuntimeDialogueGraph RunitmeGraph;
 
+    public RuntimeDialogueGraph RunitmeGraph;
+    [Header("Panel Settings")]
     [Header("UI Components")]
-    public GameObject DialoguePanel;
-    public TextMeshProUGUI SpeakerNameText;
-    public TextMeshProUGUI DialogueText;
+    public GameObject DialoguePanelContainer;
+    public TextMeshProUGUI PanelSpeakerNameText;
+    public TextMeshProUGUI PanelDialogueText;
 
     [Header("Choice Button UI")]
-    public Button ChoiceButtonPrefab;
-    public Transform ChoiceButtonContainer;
+    public Button PanelChoiceButtonPrefab;
+    public Transform PanelChoiceButtonContainer;
+
+    [Header("Popup Settings")]
+    [Header("UI Components")]
+    public GameObject DialoguePopupContainer;
+    public TextMeshProUGUI PopupDialogueText;
+
+    [Header("Choice Button UI")]
+    public Button PopupChoiceButtonPrefab;
+    public Transform PopupChoiceButtonContainer;
+
+    [Header("Bulle Settings")]
+    [Header("UI Components")]
+    public GameObject DialogueBulleContainer;
+    public TextMeshProUGUI BulleDialogueText;
 
     private Dictionary<string, RuntimeDialogueNode> _nodeLookup = new Dictionary<string, RuntimeDialogueNode>();
     private RuntimeDialogueNode _currentNode;
@@ -39,7 +56,7 @@ public class DialogueManager : MonoBehaviour
 
     private void Update()
     {
-        if (Mouse.current.leftButton.wasPressedThisFrame && _currentNode != null && _currentNode.Choices.Count == 0)
+        if (Mouse.current.leftButton.wasPressedThisFrame && _currentNode != null && _currentNode.Choices.Count == 0 && _currentNode.UIModuleType != DialogueUIModuleType.Bulle)
         {
             if (!string.IsNullOrEmpty(_currentNode.NextNodeID))
             {
@@ -62,11 +79,40 @@ public class DialogueManager : MonoBehaviour
 
         _currentNode = _nodeLookup[nodeID];
 
-        DialoguePanel.SetActive(true);
-        SpeakerNameText.SetText(_currentNode.SpeakerName);
-        DialogueText.SetText(_currentNode.DialogueText);
+        switch(_currentNode.UIModuleType)
+        {
+            case DialogueUIModuleType.Panel:
+                ShowPanelNode();
+                break;
+            case DialogueUIModuleType.Popup:
+                ShowPopupNode();
+                break;
+            case DialogueUIModuleType.Bulle:
+                ShowBulleNode();
+                break;
+        }
+        
+    }
 
-        foreach (Transform child in ChoiceButtonContainer)
+#region Show Node Types
+    private void ShowBulleNode()
+    {
+        DialoguePanelContainer.SetActive(false);
+        DialoguePopupContainer.SetActive(false);
+        DialogueBulleContainer.SetActive(true);
+        BulleDialogueText.SetText(_currentNode.DialogueText);
+        Debug.Log(_currentNode.NextNodeID);
+        StartCoroutine(WaitAndEndDialogue(_currentNode.DisplayDuration));
+    }
+
+    private void ShowPopupNode()
+    {
+        DialoguePanelContainer.SetActive(false);
+        DialogueBulleContainer.SetActive(false);
+        DialoguePopupContainer.SetActive(true);
+        PopupDialogueText.SetText(_currentNode.DialogueText);
+
+        foreach (Transform child in PopupChoiceButtonContainer)
         {
             Destroy(child.gameObject);
         }
@@ -75,7 +121,7 @@ public class DialogueManager : MonoBehaviour
         {
             foreach (var choice in _currentNode.Choices)
             {
-                Button button = Instantiate(ChoiceButtonPrefab, ChoiceButtonContainer);
+                Button button = Instantiate(PopupChoiceButtonPrefab, PopupChoiceButtonContainer);
 
                 TextMeshProUGUI buttonText = button.GetComponentInChildren<TextMeshProUGUI>();
                 if (buttonText != null)
@@ -101,14 +147,85 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
-    private void EndDialogue()
+    private void ShowPanelNode()
     {
-        DialoguePanel.SetActive(false);
-        _currentNode = null;
+        DialoguePanelContainer.SetActive(true);
+        DialogueBulleContainer.SetActive(false);
+        DialoguePopupContainer.SetActive(false);
+        PanelSpeakerNameText.SetText(_currentNode.SpeakerName);
+        PanelDialogueText.SetText(_currentNode.DialogueText);
 
-        foreach (Transform child in ChoiceButtonContainer)
+        foreach (Transform child in PanelChoiceButtonContainer)
         {
             Destroy(child.gameObject);
+        }
+
+        if (_currentNode.Choices.Count > 0)
+        {
+            foreach (var choice in _currentNode.Choices)
+            {
+                Button button = Instantiate(PanelChoiceButtonPrefab, PanelChoiceButtonContainer);
+
+                TextMeshProUGUI buttonText = button.GetComponentInChildren<TextMeshProUGUI>();
+                if (buttonText != null)
+                {
+                    buttonText.SetText(choice.ChoiceText);
+                }
+
+                if (button != null)
+                {
+                    button.onClick.AddListener(() =>
+                    {
+                        if (!string.IsNullOrEmpty(choice.DestinationNodeID))
+                        {
+                            ShowNode(choice.DestinationNodeID);
+                        }
+                        else
+                        {
+                            EndDialogue();
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+#endregion
+    private void EndDialogue()
+    {
+        switch(_currentNode?.UIModuleType)
+        {
+            case DialogueUIModuleType.Panel:
+                DialoguePanelContainer.SetActive(false);
+                foreach (Transform child in PanelChoiceButtonContainer)
+                {
+                    Destroy(child.gameObject);
+                }
+                break;
+            case DialogueUIModuleType.Popup:
+                DialoguePopupContainer.SetActive(false);
+                foreach (Transform child in PopupChoiceButtonContainer)
+                {
+                    Destroy(child.gameObject);
+                }
+                break;
+            case DialogueUIModuleType.Bulle:
+                DialogueBulleContainer.SetActive(false);
+                break;
+        }
+        _currentNode = null;
+    }
+
+    IEnumerator WaitAndEndDialogue(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (!string.IsNullOrEmpty(_currentNode.NextNodeID))
+        {
+            ShowNode(_currentNode.NextNodeID);
+        }
+        else
+        {
+            EndDialogue();
         }
     }
 }

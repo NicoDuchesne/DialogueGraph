@@ -4,7 +4,6 @@ using Unity.GraphToolkit.Editor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Diagnostics;
 
 [ScriptedImporter(1, DialogueGraph.AssetsExtention)]
 
@@ -33,8 +32,10 @@ public class DialogueGraphImporter : ScriptedImporter
 
         foreach (var iNode in editorGraph.GetNodes())
         {
+            // check for start and end nodes to skip
             if (iNode is StartNode || iNode is EndNode) continue;
 
+            // Porcess other nodes
             var runtimeNode = new RuntimeDialogueNode { NodeID = nodeIDMap[iNode]};
             if (iNode is DialogueNode dialogueNode)
             {
@@ -52,10 +53,29 @@ public class DialogueGraphImporter : ScriptedImporter
         ctx.SetMainObject(runtimeGraph);
     }
 
+    #region Node Processors
     private void ProcessDialogueNode(DialogueNode node, RuntimeDialogueNode runtimeNode, Dictionary<INode, string> nodeIDMap)
     {
-        runtimeNode.SpeakerName = GetPortValue<string>(node.GetInputPortByName("Speaker"));
-        runtimeNode.DialogueText = GetPortValue<string>(node.GetInputPortByName("Dialogue"));
+        var uiOption = node.GetNodeOptionByName("UIModuleType");
+        runtimeNode.UIModuleType =
+        uiOption != null && uiOption.TryGetValue(out DialogueUIModuleType uiType)
+            ? uiType
+            : DialogueUIModuleType.Panel;
+
+        switch (runtimeNode.UIModuleType)
+        {
+            case DialogueUIModuleType.Panel:
+                runtimeNode.SpeakerName = GetPortValue<string>(node.GetInputPortByName("Speaker"));
+                runtimeNode.DialogueText = GetPortValue<string>(node.GetInputPortByName("Dialogue"));
+                break;
+            case DialogueUIModuleType.Popup:
+                runtimeNode.DialogueText = GetPortValue<string>(node.GetInputPortByName("Dialogue"));
+                break;
+            case DialogueUIModuleType.Bulle:
+                runtimeNode.DialogueText = GetPortValue<string>(node.GetInputPortByName("Dialogue"));
+                runtimeNode.DisplayDuration = GetPortValue<float>(node.GetInputPortByName("Display Duration"));
+                break;
+        }
 
         var nextNodePort = node.GetOutputPortByName("out")?.firstConnectedPort;
         if (nextNodePort != null)
@@ -66,8 +86,24 @@ public class DialogueGraphImporter : ScriptedImporter
 
     private void ProcessChoiceNode(ChoiceNode node, RuntimeDialogueNode runtimeNode, Dictionary<INode, string> nodeIDMap)
     {
-        runtimeNode.SpeakerName = GetPortValue<string>(node.GetInputPortByName("Speaker"));
-        runtimeNode.DialogueText = GetPortValue<string>(node.GetInputPortByName("Dialogue"));
+        var uiOption = node.GetNodeOptionByName("UIModuleType");
+        runtimeNode.UIModuleType =
+        uiOption != null && uiOption.TryGetValue(out DialogueUIModuleType uiType)
+            ? uiType
+            : DialogueUIModuleType.Panel;
+        switch (runtimeNode.UIModuleType)
+        {
+            case DialogueUIModuleType.Panel:
+                runtimeNode.SpeakerName = GetPortValue<string>(node.GetInputPortByName("Speaker"));
+                runtimeNode.DialogueText = GetPortValue<string>(node.GetInputPortByName("Dialogue"));
+                break;
+            case DialogueUIModuleType.Popup:
+                runtimeNode.DialogueText = GetPortValue<string>(node.GetInputPortByName("Dialogue"));
+                break;
+            case DialogueUIModuleType.Bulle:
+                Debug.LogWarning("ChoiceNode with Bulle UIModuleType is not supported.");
+                return;
+        }
 
         var choiceOutputPorts = node.GetOutputPorts().Where(p => p.name.StartsWith("Choice")).ToList();
 
@@ -86,6 +122,7 @@ public class DialogueGraphImporter : ScriptedImporter
         }
     }
 
+    #endregion
     private T GetPortValue<T>(IPort port)
     {
         if (port == null) return default;

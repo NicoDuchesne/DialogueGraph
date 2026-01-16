@@ -1,6 +1,6 @@
 using System;
-using UnityEngine;
 
+//Interface de nos save data, ce sont donc les informations les plus basiques que toutes les data doivent avoir
 public interface ISaveData
 {
     public static string PrefixID { get; }

@@ -1,13 +1,12 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Net.NetworkInformation;
 using System.Runtime.Serialization.Formatters.Binary;
-using UnityEngine;
 
-
+//Classe static pour aider au Save System
 public static class SaveUtils
 {
+    //Opens a directory with a given path
     public static void OpenDirectory(string path)
     {
         if (Directory.Exists(path))
@@ -16,7 +15,8 @@ public static class SaveUtils
         }
     }
 
-    public static ISaveData LoadFile(this string path, Action<bool> callback = null) => path.LoadFile<ISaveData>(callback);
+    //LOAD FILE
+    //public static ISaveData LoadFile(this string path, Action<bool> callback = null) => path.LoadFile<ISaveData>(callback);
     public static T LoadFile<T>(this string path, Action<bool> callback = null) where T : ISaveData
     {
         T data = default;
@@ -26,7 +26,6 @@ public static class SaveUtils
         try
         {
             FileStream stream = new(path, FileMode.Open);
-            UnityEngine.Debug.Log("File opened OK!");
             data = (T)new BinaryFormatter().Deserialize(stream);
             stream.Close();
             callback?.Invoke(true);
@@ -39,6 +38,7 @@ public static class SaveUtils
         return data;
     }
 
+    //SAVE FILE
     public static void SaveFile<T>(this T data, string path, FileMode mode, Action<bool> callback = null) where T : ISaveData
     {
         var procLab = mode == FileMode.Create ? "Edit" : "Create";
@@ -59,6 +59,8 @@ public static class SaveUtils
             callback?.Invoke(false);
         }
     }
+
+
 
     private static void DebugInfo(bool result, string success, string fail) => UnityEngine.Debug.Log(result ? success : fail);
 

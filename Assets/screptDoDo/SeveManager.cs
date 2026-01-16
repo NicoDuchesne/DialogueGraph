@@ -45,7 +45,7 @@ public class SaveManager : MonoBehaviour
 
             foreach (var field in fields)
             {
-                var attr = field.GetCustomAttribute<SaveField>();
+                var attr = field.GetCustomAttribute<SaveFieldBase>();
                 if (attr == null) continue;
 
                 string key = attr.key ?? field.Name;
@@ -53,7 +53,10 @@ public class SaveManager : MonoBehaviour
 
                 entry.values[key] = value.ToString();
                 hasData = true;
+
+                Debug.Log($"[SAVE] {mono.gameObject.name} | {mono.GetType().Name} | {key} = {value}");
             }
+
 
             if (hasData)
                 file.entries.Add(entry);
@@ -61,11 +64,16 @@ public class SaveManager : MonoBehaviour
 
         File.WriteAllText(GetPath(currentSlot),
             JsonUtility.ToJson(file, true));
+
+        Debug.Log($"[SAVE] File written : {GetPath(currentSlot)}");
+
     }
 
     // ================= LOAD =================
     public void Load()
     {
+        Debug.Log($"[LOAD] Loading slot : {currentSlot}");
+
         string path = GetPath(currentSlot);
         if (!File.Exists(path)) return;
 
@@ -88,13 +96,12 @@ public class SaveManager : MonoBehaviour
                 BindingFlags.Public |
                 BindingFlags.NonPublic))
             {
-                var attr = field.GetCustomAttribute<SaveField>();
+                var attr = field.GetCustomAttribute<SaveFieldBase>();
                 if (attr == null) continue;
 
                 string key = attr.key ?? field.Name;
-                if (!entry.values.ContainsKey(key)) continue;
-
-                string value = entry.values[key];
+                if (!entry.values.TryGetValue(key, out string value))
+                    continue;
 
                 if (field.FieldType == typeof(int))
                     field.SetValue(mono, int.Parse(value));
@@ -104,7 +111,11 @@ public class SaveManager : MonoBehaviour
                     field.SetValue(mono, bool.Parse(value));
                 else if (field.FieldType == typeof(string))
                     field.SetValue(mono, value);
+
+                Debug.Log($"[LOAD] {entry.objectName} | {type.Name} | {key} = {value}");
             }
+
+
         }
     }
 

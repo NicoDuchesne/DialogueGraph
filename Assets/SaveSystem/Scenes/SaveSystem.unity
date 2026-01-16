@@ -1305,6 +1305,8 @@ GameObject:
   - component: {fileID: 321222777}
   - component: {fileID: 321222781}
   - component: {fileID: 321222782}
+  - component: {fileID: 321222783}
+  - component: {fileID: 321222784}
   m_Layer: 5
   m_Name: CANVAS
   m_TagString: Untagged
@@ -1437,6 +1439,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SaveUI
   slotText: {fileID: 0}
+--- !u!114 &321222783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 321222776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5faa70c6bd2612946a61c6f1879c619f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Test
+  level: 10
+  playerName: Star Lord
+  hasKey: 1
+--- !u!114 &321222784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 321222776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c8dc3f1be900204890c2616dc1e8a33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameController
 --- !u!1 &322332127
 GameObject:
   m_ObjectHideFlags: 0
@@ -3159,6 +3188,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 719714448}
+  - component: {fileID: 719714449}
   m_Layer: 0
   m_Name: SaveManager*
   m_TagString: Untagged
@@ -3181,6 +3211,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &719714449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 719714447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38064069d348bb648a50de585b574bf2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SaveManager
+  currentSlot: 0
 --- !u!1 &725377912
 GameObject:
   m_ObjectHideFlags: 0

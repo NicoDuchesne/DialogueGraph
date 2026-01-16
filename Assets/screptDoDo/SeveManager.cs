@@ -45,8 +45,17 @@ public class SaveManager : MonoBehaviour
 
             foreach (var field in fields)
             {
-                var attr = field.GetCustomAttribute<SaveFieldBase>();
+                var attr = field.GetCustomAttribute<SaveField>();
                 if (attr == null) continue;
+
+                string editorKey =
+                    $"{mono.gameObject.name}/{mono.GetType().Name}/{field.Name}";
+
+#if UNITY_EDITOR
+                if (!SaveFieldWindow.IsFieldEnabled(editorKey))
+                    continue;
+#endif
+
 
                 string key = attr.key ?? field.Name;
                 object value = field.GetValue(mono);
@@ -96,7 +105,7 @@ public class SaveManager : MonoBehaviour
                 BindingFlags.Public |
                 BindingFlags.NonPublic))
             {
-                var attr = field.GetCustomAttribute<SaveFieldBase>();
+                var attr = field.GetCustomAttribute<SaveField>();
                 if (attr == null) continue;
 
                 string key = attr.key ?? field.Name;

@@ -353,7 +353,7 @@ GameObject:
   m_Component:
   - component: {fileID: 98228399}
   m_Layer: 5
-  m_Name: SliderC
+  m_Name: SliderD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -996,7 +996,6 @@ GameObject:
   - component: {fileID: 321222778}
   - component: {fileID: 321222777}
   - component: {fileID: 321222781}
-  - component: {fileID: 321222782}
   m_Layer: 5
   m_Name: CANVAS
   m_TagString: Untagged
@@ -1116,19 +1115,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &321222782
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 321222776}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 574294e873051ae4496fcad1dd4e31d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SaveUI
-  slotText: {fileID: 0}
 --- !u!1 &322332127
 GameObject:
   m_ObjectHideFlags: 0
@@ -1141,7 +1127,7 @@ GameObject:
   - component: {fileID: 322332130}
   - component: {fileID: 322332129}
   m_Layer: 5
-  m_Name: TXT_SliderNameC
+  m_Name: TXT_SliderNameD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1385,7 +1371,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 329075773}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 719714449}
+        m_TargetAssemblyTypeName: MySaveManager, Assembly-CSharp
+        m_MethodName: OnOpenFolder
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &329075773
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1572,7 +1570,7 @@ GameObject:
   - component: {fileID: 382627534}
   - component: {fileID: 382627535}
   m_Layer: 5
-  m_Name: SLD_SliderC
+  m_Name: SLD_SliderD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1824,6 +1822,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 388649384}
   m_CullTransparentMesh: 1
+--- !u!1 &413908758
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 413908760}
+  - component: {fileID: 413908759}
+  m_Layer: 0
+  m_Name: Utils
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &413908759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 413908758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aefd003c75b634c458ab3b7cae1f9836, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MyButtonFunctions
+--- !u!4 &413908760
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 413908758}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 917.4426, y: 499.19897, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &427167109
 GameObject:
   m_ObjectHideFlags: 0
@@ -2017,7 +2059,19 @@ MonoBehaviour:
       m_Calls: []
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 719714449}
+        m_TargetAssemblyTypeName: MySaveManager, Assembly-CSharp
+        m_MethodName: OnNameInput
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_OnTouchScreenKeyboardStatusChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2404,6 +2458,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 719714448}
+  - component: {fileID: 719714449}
   m_Layer: 0
   m_Name: SaveManager*
   m_TagString: Untagged
@@ -2426,6 +2481,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &719714449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 719714447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1113f4bf96594a74d865a9bc9895b6b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MySaveManager
+  _saveDisplayParent: {fileID: 287845494}
+  _saveDisplayPrefab: {fileID: 3116708458526744947, guid: f61e980847a9a3446860dee5b589bd2c, type: 3}
+  _saveInputName: {fileID: 537716831}
 --- !u!1 &725377912
 GameObject:
   m_ObjectHideFlags: 0
@@ -3058,7 +3128,7 @@ GameObject:
   m_Component:
   - component: {fileID: 897779865}
   m_Layer: 5
-  m_Name: SliderNameC
+  m_Name: SliderNameD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3378,7 +3448,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 960230184}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 719714449}
+        m_TargetAssemblyTypeName: MySaveManager, Assembly-CSharp
+        m_MethodName: OnNewSave
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &960230184
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3789,6 +3871,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1410356077}
   - component: {fileID: 1410356078}
+  - component: {fileID: 1410356079}
   m_Layer: 5
   m_Name: SaveValuesField
   m_TagString: Untagged
@@ -3846,6 +3929,23 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &1410356079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1410356076}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6e0f449dd75b17428076556c750d0d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SaveValues
+  _sdValue:
+  - {fileID: 878649570}
+  - {fileID: 764144995}
+  - {fileID: 1338598834}
+  - {fileID: 382627535}
 --- !u!1 &1434178193
 GameObject:
   m_ObjectHideFlags: 0
@@ -4928,6 +5028,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 719714448}
+  - {fileID: 413908760}
   - {fileID: 321222780}
   - {fileID: 832949928}
   - {fileID: 131978531}

@@ -1,16 +1,18 @@
+using System.Diagnostics;
+using System.IO;
 using UnityEngine;
 
 public class MyButtonFunctions : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void OnClickOpenSaveDirectory()
     {
-        
+        string saveDirectoyPath = $"{Application.persistentDataPath}/Saves";
+        SaveUtils.OpenDirectory(saveDirectoyPath);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Testing()
     {
-        
+        MySaveData mySaveData = new MySaveData("ouue");
+        MySaveSystem.CreateNewGameSave(mySaveData);
     }
 }

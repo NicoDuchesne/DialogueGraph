@@ -1,4 +1,3 @@
-using F2O.SaveSystem;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -100,7 +99,7 @@ public static class MySaveSystem
         }
     }
 
-    public static void OnOpenDirectory() => SaveUtility.OpenDirectory(RootDirectoyPath);
+    public static void OnOpenDirectory() => SaveUtils.OpenDirectory(RootDirectoyPath);
 
 
 }

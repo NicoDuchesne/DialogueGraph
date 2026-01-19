@@ -25,56 +25,56 @@ public class SaveManager : MonoBehaviour
     // ================= SAVE =================
     public void Save()
     {
-        SaveFile file = new SaveFile();
+//        //SaveFile file = new SaveFile();
 
-        foreach (var mono in FindObjectsOfType<MonoBehaviour>())
-        {
-            var fields = mono.GetType().GetFields(
-                BindingFlags.Instance |
-                BindingFlags.Public |
-                BindingFlags.NonPublic
-            );
+//        foreach (var mono in FindObjectsOfType<MonoBehaviour>())
+//        {
+//            var fields = mono.GetType().GetFields(
+//                BindingFlags.Instance |
+//                BindingFlags.Public |
+//                BindingFlags.NonPublic
+//            );
 
-            SaveEntry entry = new SaveEntry
-            {
-                objectName = mono.gameObject.name,
-                componentType = mono.GetType().AssemblyQualifiedName
-            };
+//            SaveEntry entry = new SaveEntry
+//            {
+//                objectName = mono.gameObject.name,
+//                componentType = mono.GetType().AssemblyQualifiedName
+//            };
 
-            bool hasData = false;
+//            bool hasData = false;
 
-            foreach (var field in fields)
-            {
-                var attr = field.GetCustomAttribute<SaveField>();
-                if (attr == null) continue;
+//            foreach (var field in fields)
+//            {
+//                var attr = field.GetCustomAttribute<SaveField>();
+//                if (attr == null) continue;
 
-                string editorKey =
-                    $"{mono.gameObject.name}/{mono.GetType().Name}/{field.Name}";
+//                string editorKey =
+//                    $"{mono.gameObject.name}/{mono.GetType().Name}/{field.Name}";
 
-#if UNITY_EDITOR
-                if (!SaveFieldWindow.IsFieldEnabled(editorKey))
-                    continue;
-#endif
-
-
-                string key = attr.key ?? field.Name;
-                object value = field.GetValue(mono);
-
-                entry.values[key] = value.ToString();
-                hasData = true;
-
-                Debug.Log($"[SAVE] {mono.gameObject.name} | {mono.GetType().Name} | {key} = {value}");
-            }
+//#if UNITY_EDITOR
+//                if (!SaveFieldWindow.IsFieldEnabled(editorKey))
+//                    continue;
+//#endif
 
 
-            if (hasData)
-                file.entries.Add(entry);
-        }
+//                string key = attr.key ?? field.Name;
+//                object value = field.GetValue(mono);
 
-        File.WriteAllText(GetPath(currentSlot),
-            JsonUtility.ToJson(file, true));
+//                entry.values[key] = value.ToString();
+//                hasData = true;
 
-        Debug.Log($"[SAVE] File written : {GetPath(currentSlot)}");
+//                Debug.Log($"[SAVE] {mono.gameObject.name} | {mono.GetType().Name} | {key} = {value}");
+//            }
+
+
+//            if (hasData)
+//                //file.entries.Add(entry);
+//        }
+
+//        File.WriteAllText(GetPath(currentSlot),
+//            //JsonUtility.ToJson(file, true));
+
+//        //Debug.Log($"[SAVE] File written : {GetPath(currentSlot)}");
 
     }
 
@@ -86,46 +86,46 @@ public class SaveManager : MonoBehaviour
         string path = GetPath(currentSlot);
         if (!File.Exists(path)) return;
 
-        SaveFile file = JsonUtility.FromJson<SaveFile>(
-            File.ReadAllText(path));
+        //SaveFile file = JsonUtility.FromJson<SaveFile>(
+            //File.ReadAllText(path));
 
-        foreach (var entry in file.entries)
-        {
-            GameObject go = GameObject.Find(entry.objectName);
-            if (go == null) continue;
+        //foreach (var entry in file.entries)
+        //{
+        //    GameObject go = GameObject.Find(entry.objectName);
+        //    if (go == null) continue;
 
-            var type = System.Type.GetType(entry.componentType);
-            if (type == null) continue;
+        //    var type = System.Type.GetType(entry.componentType);
+        //    if (type == null) continue;
 
-            var mono = go.GetComponent(type);
-            if (mono == null) continue;
+        //    var mono = go.GetComponent(type);
+        //    if (mono == null) continue;
 
-            foreach (var field in type.GetFields(
-                BindingFlags.Instance |
-                BindingFlags.Public |
-                BindingFlags.NonPublic))
-            {
-                var attr = field.GetCustomAttribute<SaveField>();
-                if (attr == null) continue;
+        //    foreach (var field in type.GetFields(
+        //        BindingFlags.Instance |
+        //        BindingFlags.Public |
+        //        BindingFlags.NonPublic))
+        //    {
+        //        var attr = field.GetCustomAttribute<SaveField>();
+        //        if (attr == null) continue;
 
-                string key = attr.key ?? field.Name;
-                if (!entry.values.TryGetValue(key, out string value))
-                    continue;
+        //        string key = attr.key ?? field.Name;
+        //        if (!entry.values.TryGetValue(key, out string value))
+        //            continue;
 
-                if (field.FieldType == typeof(int))
-                    field.SetValue(mono, int.Parse(value));
-                else if (field.FieldType == typeof(float))
-                    field.SetValue(mono, float.Parse(value));
-                else if (field.FieldType == typeof(bool))
-                    field.SetValue(mono, bool.Parse(value));
-                else if (field.FieldType == typeof(string))
-                    field.SetValue(mono, value);
+        //        if (field.FieldType == typeof(int))
+        //            field.SetValue(mono, int.Parse(value));
+        //        else if (field.FieldType == typeof(float))
+        //            field.SetValue(mono, float.Parse(value));
+        //        else if (field.FieldType == typeof(bool))
+        //            field.SetValue(mono, bool.Parse(value));
+        //        else if (field.FieldType == typeof(string))
+        //            field.SetValue(mono, value);
 
-                Debug.Log($"[LOAD] {entry.objectName} | {type.Name} | {key} = {value}");
-            }
+        //        Debug.Log($"[LOAD] {entry.objectName} | {type.Name} | {key} = {value}");
+        //    }
 
 
-        }
+        //}
     }
 
     public bool SlotExists(SaveSlot slot)

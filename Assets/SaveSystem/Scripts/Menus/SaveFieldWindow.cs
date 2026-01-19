@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Reflection;
 
+//Window qui va scanner et afficher tous nos SaveField présents, avec séclection pour save ou non
 public class SaveFieldWindow : EditorWindow
 {
     Vector2 scroll;

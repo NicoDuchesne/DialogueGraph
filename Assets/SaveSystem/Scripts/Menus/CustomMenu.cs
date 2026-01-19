@@ -1,6 +1,6 @@
 using UnityEditor;
-using UnityEngine;
 
+//Petit Menu pour ouvrir notre window
 public class CustomMenu
 {
     [MenuItem("Save System/Save Fields Settings")]

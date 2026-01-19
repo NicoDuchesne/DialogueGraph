@@ -16,7 +16,6 @@ public static class SaveUtils
     }
 
     //LOAD FILE
-    //public static ISaveData LoadFile(this string path, Action<bool> callback = null) => path.LoadFile<ISaveData>(callback);
     public static T LoadFile<T>(this string path, Action<bool> callback = null) where T : ISaveData
     {
         T data = default;
@@ -28,7 +27,7 @@ public static class SaveUtils
             FileStream stream = new(path, FileMode.Open);
             data = (T)new BinaryFormatter().Deserialize(stream);
             stream.Close();
-            callback?.Invoke(true);
+            //callback?.Invoke(true);
         }
         catch
         {
@@ -52,7 +51,7 @@ public static class SaveUtils
             FileStream stream = new(path, mode);
             new BinaryFormatter().Serialize(stream, data);
             stream.Close();
-            callback?.Invoke(true);
+            //callback?.Invoke(true);
         }
         catch
         {

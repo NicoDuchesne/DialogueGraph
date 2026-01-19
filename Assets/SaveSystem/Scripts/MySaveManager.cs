@@ -1,27 +1,28 @@
-
-using F2O.SaveSystem;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 public class MySaveManager : MonoBehaviour
 {
+    //Display saves
     public GameObject _saveDisplayParent;
     public GameObject _saveDisplayPrefab;
-    public TMPro.TMP_InputField _saveInputName;
 
+    //Save Name Input
+    public TMPro.TMP_InputField _saveInputName;
     private string _saveName;
     public void OnNameInput()
     {
         _saveName = _saveInputName.text;
     }
 
+    //Initializations
     private void Awake()
     {
         MySaveSystem.InitDirectories();
 
         InitSaveSlots();
     }
-
     private void InitSaveSlots()
     {
         var allSaveSort = MySaveSystem.GetAllGameSaves()?.OrderByDescending(x => x.DateUpdated.ToString());
@@ -36,6 +37,7 @@ public class MySaveManager : MonoBehaviour
         }
     }
 
+    //Create New Save
     public void OnNewSave()
     {
         var newSave = Instantiate(_saveDisplayPrefab, _saveDisplayParent.transform);
@@ -50,21 +52,123 @@ public class MySaveManager : MonoBehaviour
         }
     }
 
+
+    //Add all the values into the given SaveData
     public static void GameDataToSave(ref MySaveData data)
     {
+        //Sliders values
         data._sliderValues = new();
         foreach (var slider in SaveValues.Instance._sdValue)
         {
             data._sliderValues.Add(slider.value);
         }
-            
+
+        //Input field value
+        data._inputValue = "";
+        data._inputValue = SaveValues.Instance.InputValue;
+
+        //SaveFields values
+        foreach (var mono in FindObjectsOfType<MonoBehaviour>()) //In each monobehavior
+        {
+            //Get the fields inside
+            var fields = mono.GetType().GetFields(
+                BindingFlags.Instance |
+                BindingFlags.Public |
+                BindingFlags.NonPublic
+            );
+
+            //Create SaveEntry for this monobehavior
+            SaveEntry entry = new SaveEntry
+            {
+                objectName = mono.gameObject.name,
+                componentType = mono.GetType().AssemblyQualifiedName
+            };
+
+            bool hasData = false;
+
+            foreach (var field in fields)//In each field
+            {
+                //We are only intersted in fields with the SaveField attribute
+                var attr = field.GetCustomAttribute<SaveField>();
+                if (attr == null) continue;
+
+                string editorKey =
+                    $"{mono.gameObject.name}/{mono.GetType().Name}/{field.Name}";
+
+                //We check with the menu and window, if we want to save that specific SaveField
+#if UNITY_EDITOR
+                if (!SaveFieldWindow.IsFieldEnabled(editorKey))
+                    continue;
+#endif
+
+                //Finally, the field is added in the SaveEntry
+                string key = attr.key ?? field.Name;
+                object value = field.GetValue(mono);
+
+                entry.values[key] = value.ToString();
+                hasData = true;
+
+                Debug.Log($"[SAVE] {mono.gameObject.name} | {mono.GetType().Name} | {key} = {value}");
+            }
+
+            //If there is wanted SaveFields inside the monobehaviot, add the SaveEntry in list of entries
+            if (hasData)
+                data._entries.Add(entry);
+        }
+
+
     }
 
     public static void GameDataToLoad(MySaveData data)
     {
+        //Slider Values put in the scene sliders
         for (int i = 0; i < data._sliderValues?.Count; i++)
         {
             SaveValues.Instance._sdValue[i].value = data._sliderValues[i];
+        }
+
+        //Input Value put in the scene input
+        SaveValues.Instance._inptValue.text = data._inputValue;
+
+        //SaveFields Values :
+        //we print them in DebugLog to check what we have in the List Entries
+        foreach (var entry in data._entries)
+        {
+            GameObject go = GameObject.Find(entry.objectName);
+            if (go == null) continue;
+
+            var type = System.Type.GetType(entry.componentType);
+            if (type == null) continue;
+
+            var mono = go.GetComponent(type);
+            if (mono == null) continue;
+
+            foreach (var field in type.GetFields(
+                BindingFlags.Instance |
+                BindingFlags.Public |
+                BindingFlags.NonPublic))
+            {
+                var attr = field.GetCustomAttribute<SaveField>();
+                if (attr == null) continue;
+
+                string key = attr.key ?? field.Name;
+                if (!entry.values.TryGetValue(key, out string value))
+                    continue;
+
+                //Un peu faible, on ne gère que quatre types actuellement de manière dure
+                if (field.FieldType == typeof(int))
+                    field.SetValue(mono, int.Parse(value));
+                else if (field.FieldType == typeof(float))
+                    field.SetValue(mono, float.Parse(value));
+                else if (field.FieldType == typeof(bool))
+                    field.SetValue(mono, bool.Parse(value));
+                else if (field.FieldType == typeof(string))
+                    field.SetValue(mono, value);
+
+                Debug.Log($"[LOAD] {entry.objectName} | {type.Name} | {key} = {value}");
+            }
+
+
         }
     }
 

@@ -1,5 +1,6 @@
 using System;
 
+//Real simple attribute, we know if our field has to be saved or not
 [AttributeUsage(AttributeTargets.Field)]
 public class SaveField : Attribute
 {

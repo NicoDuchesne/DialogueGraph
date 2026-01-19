@@ -6,22 +6,23 @@ using UnityEngine;
 
 public static class MySaveSystem
 {
+    //File name and paths
     public static string Extension = ".save";
     private static string _fileName = "";
     public static string GameFileName => string.IsNullOrEmpty(_fileName) ? MySaveData.PrefixID + 0 : _fileName;
+    private static string RootDirectoyPath => $"{Application.persistentDataPath}/Saves";
     private static string GameSavePath => $"{RootDirectoyPath}/{GameFileName + Extension}";
 
+    //All game saves
     private static List<MySaveData> _allGameSaves = new();
-    private static string RootDirectoyPath => $"{Application.persistentDataPath}/Saves";
     public static string[] GetAllGameSavePaths => Directory.GetFiles(RootDirectoyPath);
 
-    public static void OnOpenDirectory() => SaveUtility.OpenDirectory(RootDirectoyPath);
-
+    
+    //Get and return all the game saves
     public static List<MySaveData> GetAllGameSaves()
     {
         if (GetAllGameSavePaths.Length == _allGameSaves.Count)
         {
-            Debug.Log("Return Early");
             return _allGameSaves;
         }
 
@@ -40,17 +41,19 @@ public static class MySaveSystem
         return _allGameSaves;
     }
 
+    //Create the .save file from a SaveData
     public static void CreateNewGameSave(MySaveData data)
     {
         _fileName = data.ID;
         data.SaveFile(GameSavePath, FileMode.CreateNew);
 
         _allGameSaves.Add(data);
-
-        Debug.Log($"Create new Game Save {data} in <i>{RootDirectoyPath}</i>");
     }
 
+    //Get SaveData by Label
     public static MySaveData GetGameDataSave(string labelSave) => GetAllGameSaves().FirstOrDefault(x => x.Label == labelSave);
+
+    //Get then check the data, then returns it
     public static MySaveData LoadGameSave(string name = "")
     {
         MySaveData data = GetGameDataSave(name);
@@ -62,11 +65,33 @@ public static class MySaveSystem
             CreateNewGameSave(data);
         }
 
-        Debug.Log($"Load game {data} successful");
-
         return data;
     }
 
+    
+    //Update et enregistre une save data déjà existante
+    public static void GameSaveAs(ref MySaveData data)
+    {
+        _fileName = data.ID;
+        data.SaveFile(GameSavePath, FileMode.Create);
+
+        var id = _allGameSaves.FindIndex((x) => x.ID == _fileName);
+        _allGameSaves[id] = data;
+    }
+
+    //Delete a save file by giving its Save Data
+    public static void DeleteGameSave(MySaveData data)
+    {
+        _fileName = data.ID;
+
+        if (File.Exists(GameSavePath))
+        {
+            File.Delete(GameSavePath);
+        }
+    }
+
+
+    //Check and create the save directory
     public static void InitDirectories()
     {
         if (!Directory.Exists(RootDirectoyPath))
@@ -75,27 +100,7 @@ public static class MySaveSystem
         }
     }
 
-    public static void GameSaveAs(ref MySaveData data)
-    {
-        _fileName = data.ID;
-        data.SaveFile(GameSavePath, FileMode.Create);
-
-        var id = _allGameSaves.FindIndex((x) => x.ID == _fileName);
-        _allGameSaves[id] = data;
-
-        Debug.Log($"Save game as {data} in <i>{RootDirectoyPath}</i>");
-    }
-
-    public static void DeleteGameSave(MySaveData data)
-    {
-        _fileName = data.ID;
-
-        if (File.Exists(GameSavePath))
-        {
-            File.Delete(GameSavePath);
-            Debug.Log($"Delete game {data} successful");
-        }
-    }
+    public static void OnOpenDirectory() => SaveUtility.OpenDirectory(RootDirectoyPath);
 
 
 }

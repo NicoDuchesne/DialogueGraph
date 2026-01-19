@@ -2,6 +2,8 @@ using F2O.SaveSystem;
 using TMPro;
 using UnityEngine;
 
+//Script atatched to the prefab representing the save, displaying all the infos
+//and calling the SaveSystem and SaveManager functions when clicking on buttons
 public class SaveDisplay : MonoBehaviour
 {
     [SerializeField] private TMP_Text _txtSaveName;

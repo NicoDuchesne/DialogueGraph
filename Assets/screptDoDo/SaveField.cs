@@ -1,6 +1,7 @@
-using UnityEngine;
+using System;
 
-public class SaveField : PropertyAttribute
+[AttributeUsage(AttributeTargets.Field)]
+public class SaveField : Attribute
 {
     public string key;
 

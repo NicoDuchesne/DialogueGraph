@@ -48,12 +48,24 @@ public class SaveManager : MonoBehaviour
                 var attr = field.GetCustomAttribute<SaveField>();
                 if (attr == null) continue;
 
+                string editorKey =
+                    $"{mono.gameObject.name}/{mono.GetType().Name}/{field.Name}";
+
+#if UNITY_EDITOR
+                if (!SaveFieldWindow.IsFieldEnabled(editorKey))
+                    continue;
+#endif
+
+
                 string key = attr.key ?? field.Name;
                 object value = field.GetValue(mono);
 
                 entry.values[key] = value.ToString();
                 hasData = true;
+
+                Debug.Log($"[SAVE] {mono.gameObject.name} | {mono.GetType().Name} | {key} = {value}");
             }
+
 
             if (hasData)
                 file.entries.Add(entry);
@@ -61,11 +73,16 @@ public class SaveManager : MonoBehaviour
 
         File.WriteAllText(GetPath(currentSlot),
             JsonUtility.ToJson(file, true));
+
+        Debug.Log($"[SAVE] File written : {GetPath(currentSlot)}");
+
     }
 
     // ================= LOAD =================
     public void Load()
     {
+        Debug.Log($"[LOAD] Loading slot : {currentSlot}");
+
         string path = GetPath(currentSlot);
         if (!File.Exists(path)) return;
 
@@ -92,9 +109,8 @@ public class SaveManager : MonoBehaviour
                 if (attr == null) continue;
 
                 string key = attr.key ?? field.Name;
-                if (!entry.values.ContainsKey(key)) continue;
-
-                string value = entry.values[key];
+                if (!entry.values.TryGetValue(key, out string value))
+                    continue;
 
                 if (field.FieldType == typeof(int))
                     field.SetValue(mono, int.Parse(value));
@@ -104,7 +120,11 @@ public class SaveManager : MonoBehaviour
                     field.SetValue(mono, bool.Parse(value));
                 else if (field.FieldType == typeof(string))
                     field.SetValue(mono, value);
+
+                Debug.Log($"[LOAD] {entry.objectName} | {type.Name} | {key} = {value}");
             }
+
+
         }
     }
 

@@ -40,6 +40,7 @@ public class MySaveManager : MonoBehaviour
     //Create New Save
     public void OnNewSave()
     {
+
         var newSave = Instantiate(_saveDisplayPrefab, _saveDisplayParent.transform);
 
         MySaveData gsd = new(_saveName);
@@ -56,6 +57,8 @@ public class MySaveManager : MonoBehaviour
     //Add all the values into the given SaveData
     public static void GameDataToSave(ref MySaveData data)
     {
+        Debug.Log("Add data to save " + data.Label);
+
         //Sliders values
         data._sliderValues = new();
         foreach (var slider in SaveValues.Instance._sdValue)
@@ -111,9 +114,22 @@ public class MySaveManager : MonoBehaviour
                 Debug.Log($"[SAVE] {mono.gameObject.name} | {mono.GetType().Name} | {key} = {value}");
             }
 
-            //If there is wanted SaveFields inside the monobehaviot, add the SaveEntry in list of entries
+            //If there is wanted SaveFields inside the monobehavior, add the SaveEntry in list of entries
             if (hasData)
-                data._entries.Add(entry);
+            {
+                //check if we have to create or update the entry
+                var existing = data._entries.FirstOrDefault(e => e.objectName == entry.objectName);
+
+                if (existing != null)
+                {
+                    int index = data._entries.IndexOf(existing);
+                    data._entries[index] = entry;
+                }
+                else
+                {
+                    data._entries.Add(entry);
+                }
+            }
         }
 
 
@@ -121,6 +137,8 @@ public class MySaveManager : MonoBehaviour
 
     public static void GameDataToLoad(MySaveData data)
     {
+        Debug.Log("Load data in save " + data.Label);
+
         //Slider Values put in the scene sliders
         for (int i = 0; i < data._sliderValues?.Count; i++)
         {
